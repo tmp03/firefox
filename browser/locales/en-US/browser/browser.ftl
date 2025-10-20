@@ -1042,6 +1042,14 @@ menu-share-more =
 menu-share-copy-link =
     .label = Copy Link
     .accesskey = L
+menu-share-qr-code =
+    .label = Get QR Code
+    .accesskey = Q
+
+# QR Code Panel
+qr-code-panel-title = QR Code
+qr-code-panel-description = Scan this QR code with your phone to open this page
+
 ui-tour-info-panel-close =
     .tooltiptext = Close
 

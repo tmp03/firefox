@@ -40,6 +40,14 @@ class SharingUtilsCls {
       // Everywhere else, we disable the item, as there's no submenu.
       shareURL.hidden = !BrowserUtils.getShareableURL(browser.currentURI);
     }
+
+    // Also update or create the QR code menu item
+    let qrCodeItem = shareURL.nextElementSibling;
+    if (!qrCodeItem?.matches(".share-qr-code-item")) {
+      qrCodeItem = this.#createQRCodeMenuItem(shareURL);
+    }
+    qrCodeItem.browserToShare = Cu.getWeakReference(browser);
+    qrCodeItem.hidden = !BrowserUtils.getShareableURL(browser.currentURI);
   }
 
   /**
@@ -113,6 +121,22 @@ class SharingUtilsCls {
       shareURLMenuItem.addEventListener("command", this);
     }
     return shareURLMenuItem;
+  }
+
+  /**
+   * Creates and returns the "Get QR Code" menu item.
+   */
+  #createQRCodeMenuItem(insertAfterEl) {
+    let menu = insertAfterEl.parentNode;
+    let document = insertAfterEl.ownerDocument;
+    let qrCodeMenuItem = document.createXULElement("menuitem");
+
+    document.l10n.setAttributes(qrCodeMenuItem, "menu-share-qr-code");
+    qrCodeMenuItem.classList.add("share-qr-code-item");
+    qrCodeMenuItem.addEventListener("command", this);
+
+    menu.insertBefore(qrCodeMenuItem, insertAfterEl.nextSibling);
+    return qrCodeMenuItem;
   }
 
   /**
@@ -198,6 +222,12 @@ class SharingUtilsCls {
   }
 
   onShareURLCommand(event) {
+    // Handle QR code menu item click
+    if (event.target.classList.contains("share-qr-code-item")) {
+      this.showQRCode(event.target, event);
+      return;
+    }
+
     // Only call sharing services for the "Share" menu item. These services
     // are accessed from a submenu popup for MacOS or the "Share" menu item
     // for Windows. Use .closest() as a hack to find either the item itself
@@ -229,6 +259,18 @@ class SharingUtilsCls {
         lazy.MacSharingService.shareUrl(shareName, currentURI, titleToShare);
       }
     }
+  }
+
+  showQRCode(menuItem, event) {
+    let { gURLBar, gQRCodePanel } = menuItem.ownerGlobal;
+    let { urlToShare } = this.getDataToShare(menuItem);
+
+    if (!urlToShare) {
+      return;
+    }
+
+    let currentURI = gURLBar.makeURIReadable(urlToShare).displaySpec;
+    gQRCodePanel.show(menuItem, currentURI, event);
   }
 
   onPopupHiding(event) {

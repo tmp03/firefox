@@ -208,6 +208,11 @@ XPCOMUtils.defineLazyScriptGetter(
 );
 XPCOMUtils.defineLazyScriptGetter(
   this,
+  "gQRCodePanel",
+  "chrome://browser/content/browser-qrCodePanel.js"
+);
+XPCOMUtils.defineLazyScriptGetter(
+  this,
   "SelectTranslationsPanel",
   "chrome://browser/content/translations/selectTranslationsPanel.js"
 );

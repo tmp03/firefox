@@ -804,4 +804,25 @@
     <menuitem id="select-translations-panel-about-translations-menuitem"
               data-l10n-id="translations-panel-settings-about2"/>
   </menupopup>
+
+  <html:template id="qrCodePanelTemplate">
+    <panel id="qrCodePanel"
+           class="panel-no-padding"
+           type="arrow"
+           orient="vertical"
+           ignorekeys="true"
+           hidden="true"
+           flip="slide"
+           position="bottomright topright"
+           noautofocus="true">
+      <vbox class="panel-subview-body" style="padding: 20px; align-items: center;">
+        <html:h1 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600;"
+                 data-l10n-id="qr-code-panel-title"></html:h1>
+        <html:div id="qrCodeImage"
+                  style="width: 200px; height: 200px; background-size: contain; background-repeat: no-repeat; background-position: center;"></html:div>
+        <html:p style="margin: 10px 0 0 0; text-align: center; font-size: 12px; color: #6c6c6c;"
+                data-l10n-id="qr-code-panel-description"></html:p>
+      </vbox>
+    </panel>
+  </html:template>
 </popupset>
